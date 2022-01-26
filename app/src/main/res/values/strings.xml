@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">Test App</string>
+    <string name="initial_date_state">Выберите дату</string>
+</resources>
