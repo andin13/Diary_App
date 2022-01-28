@@ -8,14 +8,12 @@
 
     <Button
         android:id="@+id/createTaskBtn"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="60dp"
         android:text="@string/createTask"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/timeButton"
+        app:layout_constraintStart_toStartOf="@+id/timeButton"
         app:layout_constraintTop_toBottomOf="@+id/timeButton" />
 
     <EditText
@@ -35,32 +33,30 @@
         android:id="@+id/taskDescription"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
         android:ems="10"
         android:hint="@string/taskDescription"
         android:inputType="textPersonName"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.502"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/taskName"
+        app:layout_constraintStart_toStartOf="@+id/taskName"
         app:layout_constraintTop_toBottomOf="@+id/taskName" />
 
     <Button
         android:id="@+id/timeButton"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="36dp"
-        android:text="@string/timePicker"
+        android:layout_marginTop="20dp"
         android:onClick="setTime"
-        app:layout_constraintEnd_toEndOf="parent"
+        android:text="@string/timePicker"
+        app:layout_constraintEnd_toEndOf="@+id/taskDescription"
         app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/taskDescription"
         app:layout_constraintTop_toBottomOf="@+id/durationPicker" />
 
     <NumberPicker
         android:id="@+id/durationPicker"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="36dp"
+        android:layout_marginTop="20dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"

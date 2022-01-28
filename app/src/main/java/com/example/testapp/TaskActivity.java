@@ -12,13 +12,17 @@ public class TaskActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_task);
-        TextView taskResult = findViewById(R.id.taskResult);
+
+        TextView taskNameF = findViewById(R.id.taskNameF);
+        TextView taskDateF = findViewById(R.id.taskDateF);
+        TextView taskTimeF = findViewById(R.id.taskTimeF);
+        TextView taskDescriptionF = findViewById(R.id.taskDescriptionF);
+
         Intent startIntent = getIntent();
 
-        if (startIntent.hasExtra("TASK")) {
-            String result = startIntent.getStringExtra("TASK");
-            taskResult.setText(result);
-        }
-
+        taskNameF.setText(startIntent.getStringExtra("NAME"));
+        taskDateF.setText(startIntent.getStringExtra("DATE"));
+        taskTimeF.setText(startIntent.getStringExtra("TIME"));
+        taskDescriptionF.setText(startIntent.getStringExtra("DESCRIPTION"));
     }
 }

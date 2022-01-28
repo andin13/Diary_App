@@ -7,4 +7,8 @@
     <string name="taskDescription">Введите описание</string>
     <string name="createTask">Создать дело</string>
     <string name="timePicker">Выберите время</string>
+    <string name="taskNameF">Название дела</string>
+    <string name="taskDateF">Дата</string>
+    <string name="taskTimeF">Время выполнения</string>
+    <string name="taskDescriptionF">Описание</string>
 </resources>
