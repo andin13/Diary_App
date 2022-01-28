@@ -1,53 +1,117 @@
 package com.example.testapp;
 
+import android.app.Activity;
+import android.content.Intent;
+import android.os.Bundle;
+import android.util.Log;
+import android.widget.Button;
+import android.widget.CalendarView;
+import android.widget.Toast;
+
+import androidx.activity.result.ActivityResult;
+import androidx.activity.result.ActivityResultCallback;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import android.os.Bundle;
-import android.widget.CalendarView;
-import android.widget.TextView;
+
+import com.example.testapp.db.TasksDbManager;
 import com.example.testapp.utils.Task;
+
 import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
 
+    static final String GET_JSON = "GET_JSON";
+    private static final String TAG = "check";
+
     private RecyclerView numberList;
     private NumbersAdapter numbersAdapter;
-    private TextView textView;
-    public static ArrayList<Task> tasks = new ArrayList<>();
+    private TasksDbManager tasksDbManager;
+    public static ArrayList<String> tasks = new ArrayList<>();
     public static ArrayList<String> dayTasks = new ArrayList<>();
+    public static int chosenDay = 0;
+    public static int chosenMonth = 0;
+    public static int chosenYear = 0;
+    public static int checker = 0;
+
+    ActivityResultLauncher<Intent> mStartForResult = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(),
+            new ActivityResultCallback<ActivityResult>() {
+                @Override
+                public void onActivityResult(ActivityResult result) {
+
+                    if (result.getResultCode() == Activity.RESULT_OK) {
+                        Intent intent = result.getData();
+                        assert intent != null;
+                        String json = intent.getStringExtra(GET_JSON);
+                        tasksDbManager.insertToDb(json);
+                        tasks.add(json);
+
+                    }
+                }
+            });
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        for (int j = 1; j < 25; j++) {
-            for (int k = 0; k < 3; k++) {
-                tasks.add(new Task(j, j + "/1/2022", "task" + j, j + " января (" + j + "/1/2022) ", k));
-            }
-        }
-
+        tasksDbManager = new TasksDbManager(this);
         CalendarView mCalendarView = findViewById(R.id.calendarView);
-        textView = findViewById(R.id.textView);
+        Button addTaskBtn = findViewById(R.id.addTaskBtn);
         numberList = findViewById(R.id.rv_numbers);
         numberList.setHasFixedSize(true);
 
-        mCalendarView.setOnDateChangeListener((calendarView, i, i1, i2) -> {
-            String name = i2 + "/" + (i1 + 1) + "/" + i;
-            textView.setText("Заданий нет");
-            dayTasks.clear();
-            for (int j = 0; j < tasks.size(); j++) {
-                if (tasks.get(j).name.equals(name)) {
-                    dayTasks.add("Время: " + tasks.get(j).time);
-                    textView.setText(tasks.get(j).description);
-                }
-            }
-            LinearLayoutManager layoutManager = new LinearLayoutManager(MainActivity.this);
-            numberList.setLayoutManager(layoutManager);
-            numbersAdapter = new NumbersAdapter(dayTasks.size(), MainActivity.this);
-            numberList.setAdapter(numbersAdapter);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(MainActivity.this);
+        numberList.setLayoutManager(layoutManager);
 
+        addTaskBtn.setOnClickListener(view -> {
+
+            if (chosenDay == 0 && chosenMonth == 0 && chosenYear == 0) {
+                Toast toast = Toast.makeText(this,
+                        "Выберите дату",
+                        Toast.LENGTH_SHORT);
+                toast.show();
+            } else {
+                Intent taskCreationActivityIntent = new Intent(this, TaskCreationActivity.class);
+                taskCreationActivityIntent.putExtra("day", (chosenDay));
+                taskCreationActivityIntent.putExtra("month", (chosenMonth));
+                taskCreationActivityIntent.putExtra("year", (chosenYear));
+                mStartForResult.launch(taskCreationActivityIntent);
+            }
         });
+
+        mCalendarView.setOnDateChangeListener((calendarView, i, i1, i2) -> {
+            chosenDay = i2;
+            chosenMonth = i1;
+            chosenYear = i;
+            refreshRV(i, i1, i2);
+        });
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        tasksDbManager.openDb();
+        tasks.clear();
+        tasks.addAll(tasksDbManager.getFromDb());
+        refreshRV(chosenYear, chosenMonth, chosenDay);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        tasksDbManager.closeDb();
+    }
+
+    public void refreshRV(int i, int i1, int i2) {
+        dayTasks.clear();
+        for (int j = 0; j < tasks.size(); j++) {
+            if (Task.getDate(tasks.get(j)).equals((i + "-" + "0" + (i1 + 1) + "-" + i2))) {
+                dayTasks.add(tasks.get(j));
+            }
+        }
+        numbersAdapter = new NumbersAdapter(dayTasks.size(), MainActivity.this, dayTasks);
+        numberList.setAdapter(numbersAdapter);
     }
 }

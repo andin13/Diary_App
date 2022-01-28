@@ -1,4 +1,10 @@
 <resources>
     <string name="app_name">Test App</string>
     <string name="initial_date_state">Выберите дату</string>
+    <string name="addTask">Создать дело в выбранный день</string>
+    <string name="taskName">Введите название</string>
+    <string name="taskTimeDuration">Введите продолжительность дела</string>
+    <string name="taskDescription">Введите описание</string>
+    <string name="createTask">Создать дело</string>
+    <string name="timePicker">Выберите время</string>
 </resources>

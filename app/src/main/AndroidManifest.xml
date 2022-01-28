@@ -10,10 +10,16 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.TestApp">
         <activity
+            android:name=".TaskCreationActivity"
+            android:screenOrientation="portrait"
+            android:exported="false" />
+        <activity
             android:name=".TaskActivity"
+            android:screenOrientation="portrait"
             android:exported="false" />
         <activity
             android:name=".MainActivity"
+            android:screenOrientation="portrait"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
