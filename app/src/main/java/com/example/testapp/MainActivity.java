@@ -3,7 +3,6 @@ package com.example.testapp;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.widget.Button;
 import android.widget.CalendarView;
 import android.widget.Toast;
@@ -24,17 +23,14 @@ import java.util.ArrayList;
 public class MainActivity extends AppCompatActivity {
 
     static final String GET_JSON = "GET_JSON";
-    private static final String TAG = "check";
 
     private RecyclerView numberList;
-    private NumbersAdapter numbersAdapter;
     private TasksDbManager tasksDbManager;
     public static ArrayList<String> tasks = new ArrayList<>();
     public static ArrayList<String> dayTasks = new ArrayList<>();
     public static int chosenDay = 0;
     public static int chosenMonth = 0;
     public static int chosenYear = 0;
-    public static int checker = 0;
 
     ActivityResultLauncher<Intent> mStartForResult = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(),
             new ActivityResultCallback<ActivityResult>() {
@@ -106,12 +102,25 @@ public class MainActivity extends AppCompatActivity {
 
     public void refreshRV(int i, int i1, int i2) {
         dayTasks.clear();
+        i1++;
+        String date;
+        if (String.valueOf(i2).length() == 1 || String.valueOf(i1).length() == 1) {
+            if (String.valueOf(i2).length() == 1 && String.valueOf(i1).length() == 1) {
+                date = (i + "-" + "0" + i1 + "-" + "0" + i2);
+            } else if (String.valueOf(i2).length() == 1) {
+                date = (i + "-" + i1 + "-" + "0" + i2);
+            } else {
+                date = (i + "-" + "0" + i1 + "-" + i2);
+            }
+        } else {
+            date = (i + "-" + i1 + "-" + i2);
+        }
         for (int j = 0; j < tasks.size(); j++) {
-            if (Task.getDate(tasks.get(j)).equals((i + "-" + "0" + (i1 + 1) + "-" + i2))) {
+            if (Task.getDate(tasks.get(j)).equals(date)) {
                 dayTasks.add(tasks.get(j));
             }
         }
-        numbersAdapter = new NumbersAdapter(dayTasks.size(), MainActivity.this, dayTasks);
+        NumbersAdapter numbersAdapter = new NumbersAdapter(dayTasks.size(), MainActivity.this, dayTasks);
         numberList.setAdapter(numbersAdapter);
     }
 }
